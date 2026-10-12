@@ -1,11 +1,11 @@
-name: Build iOS App
+name: Construir aplicativo iOS
 
 on:
-  workflow_dispatch: # Permite iniciar a compilação manualmente pelo GitHub
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-latest # Utiliza uma máquina virtual com macOS
+    runs-on: macos-latest
 
     steps:
       - name: Checkout do código
@@ -19,7 +19,7 @@ jobs:
       - name: Compilar o projeto (Sem assinatura formal)
         run: |
           xcodebuild -project ThreeOneOSFive.xcodeproj \
-                     -scheme ThreeOneOSFive \
+                     -scheme "3105" \
                      -configuration Release \
                      -sdk iphoneos \
                      CODE_SIGN_IDENTITY="" \
@@ -30,8 +30,7 @@ jobs:
       - name: Organizar os ficheiros para gerar o IPA
         run: |
           mkdir -p Payload
-          # Encontra o aplicativo compilado e move para a pasta Payload
-          cp -r $(find ~/Library/Developer/Xcode/DerivedData -name "ThreeOneOSFive.app" -type d | head -n 1) Payload/
+          cp -r $(find ~/Library/Developer/Xcode/DerivedData -name "*.app" -type d | head -n 1) Payload/
           zip -r ThreeOneOSFive.ipa Payload
 
       - name: Enviar o IPA como artefato de download
